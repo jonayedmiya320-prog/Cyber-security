@@ -1,0 +1,105 @@
+<%- include('../partials/admin-header', { pageTitle: 'অর্ডার বিবরণ', activePage: 'orders' }) %>
+
+<div class="admin-page-header">
+  <h2 class="admin-page-title">অর্ডার: <%= order.id.substring(0,8) %></h2>
+  <a href="/admin/orders" class="btn btn-outline"><i class="fas fa-arrow-left"></i> ফিরুন</a>
+</div>
+
+<div class="order-detail-admin-grid">
+  <!-- Left -->
+  <div>
+    <div class="admin-card">
+      <h3>অর্ডার তথ্য</h3>
+      <table class="info-table">
+        <tr><td>অর্ডার ID</td><td><code><%= order.id %></code></td></tr>
+        <tr><td>তারিখ</td><td><%= new Date(order.createdAt).toLocaleString('bn-BD') %></td></tr>
+        <tr><td>স্ট্যাটাস</td>
+          <td><span class="badge badge-<%= order.status === 'approved' ? 'success' : order.status === 'rejected' ? 'danger' : 'warning' %>">
+            <%= order.status === 'approved' ? 'অ্যাপ্রুভড' : order.status === 'rejected' ? 'বাতিল' : 'অপেক্ষমান' %>
+          </span></td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="admin-card" style="margin-top:1rem;">
+      <h3>ইউজার তথ্য</h3>
+      <table class="info-table">
+        <tr><td>নাম</td><td><%= order.userName %></td></tr>
+        <tr><td>ইমেইল</td><td><%= order.userEmail %></td></tr>
+        <tr><td>ফোন</td><td><%= order.userPhone || '-' %></td></tr>
+      </table>
+    </div>
+
+    <div class="admin-card" style="margin-top:1rem;">
+      <h3>পেমেন্ট তথ্য</h3>
+      <table class="info-table">
+        <tr><td>পেমেন্ট মাধ্যম</td><td><%= order.paymentMethod %></td></tr>
+        <tr><td>Transaction ID</td><td><code><%= order.transactionId %></code></td></tr>
+        <tr><td>প্রেরকের নম্বর</td><td><%= order.senderNumber %></td></tr>
+        <tr><td>মোট মূল্য</td><td><strong>৳ <%= order.total %></strong></td></tr>
+      </table>
+    </div>
+
+    <div class="admin-card" style="margin-top:1rem;">
+      <h3>অর্ডার আইটেম</h3>
+      <% order.items.forEach(item => { %>
+      <div class="checkout-item">
+        <span><%= item.name %></span>
+        <span>৳ <%= item.price %></span>
+      </div>
+      <% }) %>
+    </div>
+  </div>
+
+  <!-- Right -->
+  <div>
+    <% if (order.status === 'pending') { %>
+    <div class="admin-card">
+      <h3 style="color:#2ecc71;"><i class="fas fa-check"></i> অ্যাপ্রুভ করুন</h3>
+      <form method="POST" action="/admin/orders/<%= order.id %>/approve">
+        <div class="form-group">
+          <label>ডাউনলোড লিংক (প্রতিটি লিংক নতুন লাইনে)</label>
+          <textarea name="downloadLinks" rows="5" class="form-input" placeholder="https://drive.google.com/...&#10;https://mega.nz/..."></textarea>
+          <small class="form-hint">একাধিক লিংক থাকলে প্রতিটি আলাদা লাইনে লিখুন</small>
+        </div>
+        <button type="submit" class="btn btn-success btn-block btn-lg" onclick="return confirm('অর্ডার অ্যাপ্রুভ করবেন?')">
+          <i class="fas fa-check-circle"></i> অ্যাপ্রুভ করুন
+        </button>
+      </form>
+    </div>
+
+    <div class="admin-card" style="margin-top:1rem;">
+      <h3 style="color:#e74c3c;"><i class="fas fa-times"></i> বাতিল করুন</h3>
+      <form method="POST" action="/admin/orders/<%= order.id %>/reject">
+        <div class="form-group">
+          <label>বাতিলের কারণ</label>
+          <textarea name="reason" rows="3" class="form-input" placeholder="কেন বাতিল করছেন..."></textarea>
+        </div>
+        <button type="submit" class="btn btn-danger btn-block" onclick="return confirm('অর্ডার বাতিল করবেন?')">
+          <i class="fas fa-times-circle"></i> বাতিল করুন
+        </button>
+      </form>
+    </div>
+    <% } %>
+
+    <% if (order.status === 'approved' && order.downloadLinks && order.downloadLinks.length > 0) { %>
+    <div class="admin-card">
+      <h3>ডাউনলোড লিংক</h3>
+      <% order.downloadLinks.forEach((link, i) => { %>
+        <p><a href="<%= link %>" target="_blank" class="btn btn-sm btn-outline"><i class="fas fa-link"></i> লিংক <%= i+1 %></a></p>
+      <% }) %>
+    </div>
+    <% } %>
+
+    <% if (order.status === 'rejected') { %>
+    <div class="admin-card">
+      <div class="alert alert-danger">
+        <strong>বাতিল করা হয়েছে</strong>
+        <% if (order.rejectReason) { %><br>কারণ: <%= order.rejectReason %><% } %>
+      </div>
+    </div>
+    <% } %>
+  </div>
+</div>
+
+<%- include('../partials/admin-footer') %>
