@@ -1,0 +1,110 @@
+<%- include('partials/header', { pageTitle: 'হোম' }) %>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="container hero-inner">
+    <div class="hero-text">
+      <h1 class="hero-title"><%= settings.siteName || 'MYMENSINGH CYBER LAB' %></h1>
+      <p class="hero-subtitle"><%= settings.siteTagline || 'আপনার ডিজিটাল মার্কেটপ্লেস' %></p>
+      <p class="hero-desc">সোর্স কোড, বই, টেমপ্লেট এবং আরো অনেক ডিজিটাল প্রোডাক্ট পাবেন এখানে।</p>
+      <div class="hero-btns">
+        <a href="/products" class="btn btn-primary btn-lg">প্রোডাক্ট দেখুন</a>
+        <% if (!user) { %>
+          <a href="/auth/register" class="btn btn-outline btn-lg">রেজিস্টার করুন</a>
+        <% } %>
+      </div>
+    </div>
+    <div class="hero-image">
+      <div class="hero-badge">
+        <i class="fas fa-shield-alt"></i>
+        <span>নিরাপদ ও বিশ্বস্ত</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Categories -->
+<% if (categories.length > 0) { %>
+<section class="section">
+  <div class="container">
+    <h2 class="section-title">ক্যাটাগরি</h2>
+    <div class="category-grid">
+      <% categories.forEach(cat => { %>
+      <a href="/products?category=<%= cat.id %>" class="category-card">
+        <i class="fas fa-folder"></i>
+        <span><%= cat.name %></span>
+      </a>
+      <% }) %>
+    </div>
+  </div>
+</section>
+<% } %>
+
+<!-- Featured Products -->
+<section class="section section-dark">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">সাম্প্রতিক প্রোডাক্ট</h2>
+      <a href="/products" class="btn btn-outline">সব দেখুন</a>
+    </div>
+    <% if (products.length === 0) { %>
+      <div class="empty-state">
+        <i class="fas fa-box-open"></i>
+        <p>এখনো কোনো প্রোডাক্ট নেই</p>
+      </div>
+    <% } else { %>
+    <div class="product-grid">
+      <% products.forEach(product => { %>
+      <div class="product-card">
+        <div class="product-img-wrap">
+          <% if (product.image) { %>
+            <img src="<%= product.image %>" alt="<%= product.name %>" class="product-img">
+          <% } else { %>
+            <div class="product-img-placeholder"><i class="fas fa-cube"></i></div>
+          <% } %>
+        </div>
+        <div class="product-body">
+          <h3 class="product-name"><%= product.name %></h3>
+          <p class="product-desc"><%= product.description ? product.description.substring(0, 80) + '...' : '' %></p>
+          <div class="product-footer">
+            <span class="product-price">৳ <%= product.price %></span>
+            <a href="/products/<%= product.id %>" class="btn btn-primary btn-sm">বিস্তারিত</a>
+          </div>
+        </div>
+      </div>
+      <% }) %>
+    </div>
+    <% } %>
+  </div>
+</section>
+
+<!-- Features -->
+<section class="section">
+  <div class="container">
+    <h2 class="section-title">কেন আমাদের বেছে নেবেন?</h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <i class="fas fa-lock"></i>
+        <h3>নিরাপদ পেমেন্ট</h3>
+        <p>বিকাশ ও নগদের মাধ্যমে সহজ ও নিরাপদ পেমেন্ট।</p>
+      </div>
+      <div class="feature-card">
+        <i class="fas fa-download"></i>
+        <h3>তাৎক্ষণিক ডাউনলোড</h3>
+        <p>পেমেন্ট অ্যাপ্রুভের পরপরই ডাউনলোড লিংক পাবেন।</p>
+      </div>
+      <div class="feature-card">
+        <i class="fas fa-headset"></i>
+        <h3>সার্বক্ষণিক সাপোর্ট</h3>
+        <p>যেকোনো সমস্যায় আমরা পাশে আছি।</p>
+      </div>
+      <div class="feature-card">
+        <i class="fas fa-check-circle"></i>
+        <h3>মানসম্পন্ন প্রোডাক্ট</h3>
+        <p>সব প্রোডাক্ট যাচাই-বাছাই করা ও আপডেটেড।</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%- include('partials/footer') %>
