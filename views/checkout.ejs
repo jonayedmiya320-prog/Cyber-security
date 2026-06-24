@@ -1,0 +1,99 @@
+<%- include('partials/header', { pageTitle: 'চেকআউট' }) %>
+
+<section class="section">
+  <div class="container">
+    <h1 class="page-title"><i class="fas fa-credit-card"></i> পেমেন্ট করুন</h1>
+
+    <% if (error) { %>
+      <div class="alert alert-danger"><i class="fas fa-exclamation-circle"></i> <%= error %></div>
+    <% } %>
+    <% if (success) { %>
+      <div class="alert alert-success"><i class="fas fa-check-circle"></i> <%= success %></div>
+    <% } %>
+
+    <% if (pendingOrder) { %>
+      <div class="alert alert-warning">
+        <i class="fas fa-clock"></i>
+        <strong>সতর্কতা:</strong> আপনার একটি অর্ডার (ID: <%= pendingOrder.id.substring(0,8) %>) অ্যাপ্রুভের অপেক্ষায় আছে।
+        আগে সেটি সম্পন্ন না হওয়া পর্যন্ত নতুন পেমেন্ট করতে পারবেন না।
+        <br><a href="/dashboard/orders/<%= pendingOrder.id %>" class="btn btn-sm btn-outline" style="margin-top:0.5rem;">অর্ডার দেখুন</a>
+      </div>
+    <% } else if (!success && cart.length > 0) { %>
+
+    <div class="checkout-grid">
+      <!-- Order Summary -->
+      <div class="checkout-summary">
+        <h3>অর্ডার বিবরণ</h3>
+        <% let total = 0; %>
+        <% cart.forEach(item => { total += parseFloat(item.price); %>
+        <div class="checkout-item">
+          <span><%= item.name %></span>
+          <span>৳ <%= item.price %></span>
+        </div>
+        <% }) %>
+        <div class="checkout-total">
+          <strong>মোট: ৳ <%= total %></strong>
+        </div>
+      </div>
+
+      <!-- Payment Form -->
+      <div class="checkout-form-wrap">
+        <h3>পেমেন্ট তথ্য</h3>
+
+        <% if (settings.bkashNumber || settings.nagadNumber || settings.rocketNumber) { %>
+        <div class="payment-info-cards">
+          <% if (settings.bkashNumber) { %>
+          <div class="payment-info-card bkash">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Bkash_logo.svg/120px-Bkash_logo.svg.png" alt="bKash" style="height:30px;">
+            <p>নম্বর: <strong><%= settings.bkashNumber %></strong></p>
+            <p><small><%= settings.bkashInstructions %></small></p>
+          </div>
+          <% } %>
+          <% if (settings.nagadNumber) { %>
+          <div class="payment-info-card nagad">
+            <strong style="font-size:1.1rem; color:#f7941d;">নগদ</strong>
+            <p>নম্বর: <strong><%= settings.nagadNumber %></strong></p>
+            <p><small><%= settings.nagadInstructions %></small></p>
+          </div>
+          <% } %>
+          <% if (settings.rocketNumber) { %>
+          <div class="payment-info-card rocket">
+            <strong style="font-size:1.1rem; color:#8b2fc9;">রকেট</strong>
+            <p>নম্বর: <strong><%= settings.rocketNumber %></strong></p>
+          </div>
+          <% } %>
+        </div>
+        <% } else { %>
+        <div class="alert alert-warning">পেমেন্ট নম্বর এখনো সেটআপ করা হয়নি। অ্যাডমিনের সাথে যোগাযোগ করুন।</div>
+        <% } %>
+
+        <form method="POST" action="/checkout" class="auth-form">
+          <div class="form-group">
+            <label>পেমেন্ট মাধ্যম</label>
+            <select name="payment_method" required class="form-input">
+              <option value="">বেছে নিন</option>
+              <% if (settings.bkashNumber) { %><option value="bKash">bKash</option><% } %>
+              <% if (settings.nagadNumber) { %><option value="নগদ">নগদ</option><% } %>
+              <% if (settings.rocketNumber) { %><option value="রকেট">রকেট</option><% } %>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>আপনার নম্বর (যে নম্বর থেকে পাঠিয়েছেন)</label>
+            <input type="text" name="sender_number" placeholder="০১XXXXXXXXX" required class="form-input">
+          </div>
+          <div class="form-group">
+            <label>Transaction ID</label>
+            <input type="text" name="transaction_id" placeholder="Transaction ID লিখুন" required class="form-input">
+            <small class="form-hint">পেমেন্টের পর SMS-এ Transaction ID পাবেন</small>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block btn-lg">
+            <i class="fas fa-paper-plane"></i> অর্ডার জমা দিন
+          </button>
+        </form>
+      </div>
+    </div>
+    <% } %>
+  </div>
+</section>
+
+<%- include('partials/footer') %>
