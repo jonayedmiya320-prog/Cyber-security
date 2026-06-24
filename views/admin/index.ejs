@@ -1,0 +1,97 @@
+<%- include('../partials/admin-header', { pageTitle: 'ড্যাশবোর্ড', activePage: 'dashboard' }) %>
+
+<h2 class="admin-page-title">ড্যাশবোর্ড</h2>
+
+<div class="admin-stats-grid">
+  <div class="admin-stat-card blue">
+    <i class="fas fa-users"></i>
+    <div>
+      <h3><%= totalUsers %></h3>
+      <p>মোট ইউজার</p>
+    </div>
+  </div>
+  <div class="admin-stat-card green">
+    <i class="fas fa-box"></i>
+    <div>
+      <h3><%= totalProducts %></h3>
+      <p>মোট প্রোডাক্ট</p>
+    </div>
+  </div>
+  <div class="admin-stat-card orange">
+    <i class="fas fa-shopping-bag"></i>
+    <div>
+      <h3><%= totalOrders %></h3>
+      <p>মোট অর্ডার</p>
+    </div>
+  </div>
+  <div class="admin-stat-card purple">
+    <i class="fas fa-taka-sign"></i>
+    <div>
+      <h3>৳ <%= totalRevenue %></h3>
+      <p>মোট আয়</p>
+    </div>
+  </div>
+</div>
+
+<div class="admin-stats-grid" style="margin-top:1rem;">
+  <div class="admin-stat-card yellow">
+    <i class="fas fa-clock"></i>
+    <div><h3><%= pending %></h3><p>অপেক্ষমান</p></div>
+  </div>
+  <div class="admin-stat-card green">
+    <i class="fas fa-check"></i>
+    <div><h3><%= approved %></h3><p>অ্যাপ্রুভড</p></div>
+  </div>
+  <div class="admin-stat-card red">
+    <i class="fas fa-times"></i>
+    <div><h3><%= rejected %></h3><p>বাতিল</p></div>
+  </div>
+  <div class="admin-stat-card blue">
+    <a href="/admin/orders?status=pending" class="btn btn-primary" style="width:100%">
+      <i class="fas fa-eye"></i> অপেক্ষমান অর্ডার দেখুন
+    </a>
+  </div>
+</div>
+
+<div class="admin-card" style="margin-top:2rem;">
+  <div class="admin-card-header">
+    <h3>সাম্প্রতিক অর্ডার</h3>
+    <a href="/admin/orders" class="btn btn-sm btn-outline">সব দেখুন</a>
+  </div>
+  <% if (recentOrders.length === 0) { %>
+    <p class="text-muted" style="padding:1rem;">কোনো অর্ডার নেই</p>
+  <% } else { %>
+  <div class="table-wrap">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>ইউজার</th>
+          <th>মোট</th>
+          <th>পেমেন্ট</th>
+          <th>স্ট্যাটাস</th>
+          <th>অ্যাকশন</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% recentOrders.forEach(order => { %>
+        <tr>
+          <td><code><%= order.id.substring(0,8) %></code></td>
+          <td><%= order.userName %></td>
+          <td>৳ <%= order.total %></td>
+          <td><%= order.paymentMethod %></td>
+          <td>
+            <span class="badge badge-<%= order.status === 'approved' ? 'success' : order.status === 'rejected' ? 'danger' : 'warning' %>">
+              <%= order.status === 'approved' ? 'অ্যাপ্রুভড' : order.status === 'rejected' ? 'বাতিল' : 'অপেক্ষমান' %>
+            </span>
+          </td>
+          <td><a href="/admin/orders/<%= order.id %>" class="btn btn-sm btn-outline">দেখুন</a></td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+  <% } %>
+</div>
+
+<%- include('../partials/admin-footer') %>
