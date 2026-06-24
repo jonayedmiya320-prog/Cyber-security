@@ -1,0 +1,78 @@
+<%- include('partials/header', { pageTitle: 'প্রোডাক্ট' }) %>
+
+<section class="section">
+  <div class="container">
+    <h1 class="page-title">সকল প্রোডাক্ট</h1>
+
+    <!-- Search & Filter -->
+    <form class="search-form" method="GET" action="/products">
+      <div class="search-row">
+        <div class="search-input-wrap">
+          <input type="text" name="search" value="<%= search %>" placeholder="প্রোডাক্ট খুঁজুন..." class="search-input">
+          <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i> খুঁজুন</button>
+        </div>
+        <select name="category" class="select-input" onchange="this.form.submit()">
+          <option value="">সব ক্যাটাগরি</option>
+          <% categories.forEach(cat => { %>
+            <option value="<%= cat.id %>" <%= category === cat.id ? 'selected' : '' %>><%= cat.name %></option>
+          <% }) %>
+        </select>
+        <% if (search || category) { %>
+          <a href="/products" class="btn btn-outline">রিসেট</a>
+        <% } %>
+      </div>
+    </form>
+
+    <p class="result-count">মোট <strong><%= total %></strong>টি প্রোডাক্ট পাওয়া গেছে</p>
+
+    <% if (products.length === 0) { %>
+      <div class="empty-state">
+        <i class="fas fa-search"></i>
+        <p>কোনো প্রোডাক্ট পাওয়া যায়নি</p>
+        <a href="/products" class="btn btn-outline">সব প্রোডাক্ট দেখুন</a>
+      </div>
+    <% } else { %>
+    <div class="product-grid">
+      <% products.forEach(product => { %>
+      <div class="product-card">
+        <div class="product-img-wrap">
+          <% if (product.image) { %>
+            <img src="<%= product.image %>" alt="<%= product.name %>" class="product-img">
+          <% } else { %>
+            <div class="product-img-placeholder"><i class="fas fa-cube"></i></div>
+          <% } %>
+          <% if (product.stock === 0) { %>
+            <span class="badge-out">স্টক নেই</span>
+          <% } %>
+        </div>
+        <div class="product-body">
+          <h3 class="product-name"><%= product.name %></h3>
+          <p class="product-desc"><%= product.description ? product.description.substring(0, 80) + '...' : '' %></p>
+          <div class="product-footer">
+            <span class="product-price">৳ <%= product.price %></span>
+            <a href="/products/<%= product.id %>" class="btn btn-primary btn-sm">বিস্তারিত</a>
+          </div>
+        </div>
+      </div>
+      <% }) %>
+    </div>
+
+    <!-- Pagination -->
+    <% if (totalPages > 1) { %>
+    <div class="pagination">
+      <% if (page > 1) { %>
+        <a href="/products?page=<%= page-1 %>&search=<%= search %>&category=<%= category %>" class="page-btn"><i class="fas fa-chevron-left"></i></a>
+      <% } %>
+      <% for(let i = 1; i <= totalPages; i++) { %>
+        <a href="/products?page=<%= i %>&search=<%= search %>&category=<%= category %>" class="page-btn <%= i === page ? 'active' : '' %>"><%= i %></a>
+      <% } %>
+      <% if (page < totalPages) { %>
+        <a href="/products?page=<%= page+1 %>&search=<%= search %>&category=<%= category %>" class="page-btn"><i class="fas fa-chevron-right"></i></a>
+      <% } %>
+    </div>
+    <% } %>
+    <% } %>
+  </div>
+</section>
+
+<%- include('partials/footer') %>
