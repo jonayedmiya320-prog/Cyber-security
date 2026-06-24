@@ -1,0 +1,56 @@
+<%- include('partials/header', { pageTitle: 'কার্ট' }) %>
+
+<section class="section">
+  <div class="container">
+    <h1 class="page-title"><i class="fas fa-shopping-cart"></i> আমার কার্ট</h1>
+
+    <% if (cart.length === 0) { %>
+      <div class="empty-state">
+        <i class="fas fa-cart-shopping"></i>
+        <p>কার্ট খালি আছে</p>
+        <a href="/products" class="btn btn-primary">কেনাকাটা শুরু করুন</a>
+      </div>
+    <% } else { %>
+    <div class="cart-grid">
+      <div class="cart-items">
+        <% let total = 0; %>
+        <% cart.forEach(item => { total += parseFloat(item.price); %>
+        <div class="cart-item">
+          <div class="cart-item-img">
+            <% if (item.image) { %>
+              <img src="<%= item.image %>" alt="<%= item.name %>">
+            <% } else { %>
+              <div class="cart-img-placeholder"><i class="fas fa-cube"></i></div>
+            <% } %>
+          </div>
+          <div class="cart-item-info">
+            <h3><%= item.name %></h3>
+            <span class="product-price">৳ <%= item.price %></span>
+          </div>
+          <form method="POST" action="/cart/remove">
+            <input type="hidden" name="productId" value="<%= item.productId %>">
+            <button type="submit" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i> সরান</button>
+          </form>
+        </div>
+        <% }) %>
+      </div>
+
+      <div class="cart-summary">
+        <h3>অর্ডার সারসংক্ষেপ</h3>
+        <div class="summary-row">
+          <span>মোট আইটেম:</span>
+          <span><%= cart.length %>টি</span>
+        </div>
+        <div class="summary-row summary-total">
+          <span>মোট মূল্য:</span>
+          <span>৳ <%= total %></span>
+        </div>
+        <a href="/checkout" class="btn btn-primary btn-block btn-lg">পেমেন্ট করুন</a>
+        <a href="/products" class="btn btn-outline btn-block" style="margin-top:0.5rem;">কেনাকাটা চালিয়ে যান</a>
+      </div>
+    </div>
+    <% } %>
+  </div>
+</section>
+
+<%- include('partials/footer') %>
