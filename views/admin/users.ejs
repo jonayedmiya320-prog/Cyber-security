@@ -1,0 +1,80 @@
+<%- include('../partials/admin-header', { pageTitle: 'ইউজার', activePage: 'users' }) %>
+
+<div class="admin-page-header">
+  <h2 class="admin-page-title">ইউজার ম্যানেজমেন্ট</h2>
+</div>
+
+<div class="admin-card">
+  <form class="search-form" method="GET" action="/admin/users">
+    <div class="search-row">
+      <input type="text" name="search" value="<%= search %>" placeholder="নাম বা ইমেইল..." class="search-input">
+      <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i> খুঁজুন</button>
+      <% if (search) { %><a href="/admin/users" class="btn btn-outline">রিসেট</a><% } %>
+    </div>
+  </form>
+
+  <p class="result-count">মোট <strong><%= total %></strong> জন ইউজার</p>
+
+  <% if (users.length === 0) { %>
+    <div class="empty-state"><i class="fas fa-users"></i><p>কোনো ইউজার নেই</p></div>
+  <% } else { %>
+  <div class="table-wrap">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>নাম</th>
+          <th>ইমেইল</th>
+          <th>ফোন</th>
+          <th>রোল</th>
+          <th>স্ট্যাটাস</th>
+          <th>যোগদান</th>
+          <th>অ্যাকশন</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% users.forEach(u => { %>
+        <tr>
+          <td><strong><%= u.name %></strong></td>
+          <td><%= u.email %></td>
+          <td><%= u.phone || '-' %></td>
+          <td><span class="badge <%= u.role === 'admin' ? 'badge-info' : 'badge-success' %>"><%= u.role %></span></td>
+          <td><span class="badge <%= u.banned ? 'badge-danger' : 'badge-success' %>"><%= u.banned ? 'ব্যান' : 'সক্রিয়' %></span></td>
+          <td><small><%= new Date(u.createdAt).toLocaleDateString('bn-BD') %></small></td>
+          <td class="action-btns">
+            <% if (u.role !== 'admin') { %>
+              <form method="POST" action="/admin/users/<%= u.id %>/ban" style="display:inline;">
+                <button type="submit" class="btn btn-sm <%= u.banned ? 'btn-success' : 'btn-warning' %>">
+                  <%= u.banned ? 'আনব্যান' : 'ব্যান' %>
+                </button>
+              </form>
+              <form method="POST" action="/admin/users/<%= u.id %>/delete" style="display:inline;" onsubmit="return confirm('ইউজার মুছে ফেলবেন?')">
+                <button type="submit" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+              </form>
+            <% } else { %>
+              <span class="text-muted">-</span>
+            <% } %>
+          </td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination -->
+  <% if (totalPages > 1) { %>
+  <div class="pagination">
+    <% if (page > 1) { %>
+      <a href="/admin/users?page=<%= page-1 %>&search=<%= search %>" class="page-btn"><i class="fas fa-chevron-left"></i></a>
+    <% } %>
+    <% for(let i = 1; i <= totalPages; i++) { %>
+      <a href="/admin/users?page=<%= i %>&search=<%= search %>" class="page-btn <%= i === page ? 'active' : '' %>"><%= i %></a>
+    <% } %>
+    <% if (page < totalPages) { %>
+      <a href="/admin/users?page=<%= page+1 %>&search=<%= search %>" class="page-btn"><i class="fas fa-chevron-right"></i></a>
+    <% } %>
+  </div>
+  <% } %>
+  <% } %>
+</div>
+
+<%- include('../partials/admin-footer') %>
