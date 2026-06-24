@@ -1,0 +1,6 @@
+[
+  {"id": "cat1", "name": "Source Code", "slug": "source-code"},
+  {"id": "cat2", "name": "Books", "slug": "books"},
+  {"id": "cat3", "name": "Templates", "slug": "templates"},
+  {"id": "cat4", "name": "Tools", "slug": "tools"}
+]
