@@ -1,0 +1,82 @@
+<%- include('../partials/admin-header', { pageTitle: 'অর্ডার', activePage: 'orders' }) %>
+
+<div class="admin-page-header">
+  <h2 class="admin-page-title">অর্ডার ম্যানেজমেন্ট</h2>
+</div>
+
+<div class="admin-card">
+  <form class="search-form" method="GET" action="/admin/orders">
+    <div class="search-row">
+      <input type="text" name="search" value="<%= search %>" placeholder="ইউজার/Transaction ID..." class="search-input">
+      <select name="status" class="select-input" onchange="this.form.submit()">
+        <option value="">সব স্ট্যাটাস</option>
+        <option value="pending" <%= status === 'pending' ? 'selected' : '' %>>অপেক্ষমান</option>
+        <option value="approved" <%= status === 'approved' ? 'selected' : '' %>>অ্যাপ্রুভড</option>
+        <option value="rejected" <%= status === 'rejected' ? 'selected' : '' %>>বাতিল</option>
+      </select>
+      <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i></button>
+      <% if (search || status) { %><a href="/admin/orders" class="btn btn-outline">রিসেট</a><% } %>
+    </div>
+  </form>
+
+  <p class="result-count">মোট <strong><%= total %></strong>টি অর্ডার</p>
+
+  <% if (orders.length === 0) { %>
+    <div class="empty-state"><i class="fas fa-shopping-bag"></i><p>কোনো অর্ডার নেই</p></div>
+  <% } else { %>
+  <div class="table-wrap">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>ইউজার</th>
+          <th>মোট</th>
+          <th>পেমেন্ট</th>
+          <th>Txn ID</th>
+          <th>স্ট্যাটাস</th>
+          <th>তারিখ</th>
+          <th>অ্যাকশন</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% orders.forEach(order => { %>
+        <tr>
+          <td><code><%= order.id.substring(0,8) %></code></td>
+          <td>
+            <strong><%= order.userName %></strong>
+            <br><small><%= order.userEmail %></small>
+          </td>
+          <td>৳ <%= order.total %></td>
+          <td><%= order.paymentMethod %></td>
+          <td><code><%= order.transactionId %></code></td>
+          <td>
+            <span class="badge badge-<%= order.status === 'approved' ? 'success' : order.status === 'rejected' ? 'danger' : 'warning' %>">
+              <%= order.status === 'approved' ? 'অ্যাপ্রুভড' : order.status === 'rejected' ? 'বাতিল' : 'অপেক্ষমান' %>
+            </span>
+          </td>
+          <td><small><%= new Date(order.createdAt).toLocaleDateString('bn-BD') %></small></td>
+          <td><a href="/admin/orders/<%= order.id %>" class="btn btn-sm btn-primary">পরিচালনা</a></td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination -->
+  <% if (totalPages > 1) { %>
+  <div class="pagination">
+    <% if (page > 1) { %>
+      <a href="/admin/orders?page=<%= page-1 %>&status=<%= status %>&search=<%= search %>" class="page-btn"><i class="fas fa-chevron-left"></i></a>
+    <% } %>
+    <% for(let i = 1; i <= totalPages; i++) { %>
+      <a href="/admin/orders?page=<%= i %>&status=<%= status %>&search=<%= search %>" class="page-btn <%= i === page ? 'active' : '' %>"><%= i %></a>
+    <% } %>
+    <% if (page < totalPages) { %>
+      <a href="/admin/orders?page=<%= page+1 %>&status=<%= status %>&search=<%= search %>" class="page-btn"><i class="fas fa-chevron-right"></i></a>
+    <% } %>
+  </div>
+  <% } %>
+  <% } %>
+</div>
+
+<%- include('../partials/admin-footer') %>
