@@ -82,7 +82,17 @@ router.get('/products', (req, res) => {
   const totalPages = Math.ceil(total / perPage);
   const paginated = products.reverse().slice((page - 1) * perPage, page * perPage);
 
-  res.render('admin/products', { products: paginated, categories, search, page, totalPages, total, error: null, success: null });
+  res.render('admin/products', {
+    products: paginated,
+    categories,
+    search,
+    page,
+    totalPages,
+    total,
+    error: null,
+    success: null,
+    successMsg: req.query.success ? true : false
+  });
 });
 
 router.get('/products/add', (req, res) => {
@@ -95,7 +105,11 @@ router.post('/products/add', upload.single('image'), (req, res) => {
   const { name, description, price, stock, categoryId, downloadLink, active } = req.body;
 
   if (!name || !price || !categoryId) {
-    return res.render('admin/add-product', { categories, error: 'নাম, দাম ও ক্যাটাগরি আবশ্যক', product: null });
+    return res.render('admin/add-product', {
+      categories,
+      error: 'নাম, দাম ও ক্যাটাগরি আবশ্যক',
+      product: null
+    });
   }
 
   const products = readJSON('products.json');
@@ -136,7 +150,11 @@ router.post('/products/edit/:id', upload.single('image'), (req, res) => {
   const product = products[idx];
 
   if (!name || !price || !categoryId) {
-    return res.render('admin/edit-product', { product, categories, error: 'নাম, দাম ও ক্যাটাগরি আবশ্যক' });
+    return res.render('admin/edit-product', {
+      product,
+      categories,
+      error: 'নাম, দাম ও ক্যাটাগরি আবশ্যক'
+    });
   }
 
   products[idx] = {
@@ -218,7 +236,14 @@ router.get('/orders', (req, res) => {
   const totalPages = Math.ceil(total / perPage);
   const paginated = orders.slice((page - 1) * perPage, page * perPage);
 
-  res.render('admin/orders', { orders: paginated, status, search, page, totalPages, total });
+  res.render('admin/orders', {
+    orders: paginated,
+    status,
+    search,
+    page,
+    totalPages,
+    total
+  });
 });
 
 router.get('/orders/:id', (req, res) => {
@@ -236,10 +261,11 @@ router.post('/orders/:id/approve', (req, res) => {
 
   const { downloadLinks } = req.body;
   orders[idx].status = 'approved';
-  orders[idx].downloadLinks = downloadLinks ? downloadLinks.split('\n').map(l => l.trim()).filter(Boolean) : [];
+  orders[idx].downloadLinks = downloadLinks
+    ? downloadLinks.split('\n').map(l => l.trim()).filter(Boolean)
+    : [];
   orders[idx].updatedAt = new Date().toISOString();
 
-  // Decrease stock
   orders[idx].items.forEach(item => {
     const pIdx = products.findIndex(p => p.id === item.productId);
     if (pIdx !== -1 && products[pIdx].stock > 0) {
@@ -273,14 +299,23 @@ router.get('/users', (req, res) => {
 
   if (search) {
     const s = search.toLowerCase();
-    users = users.filter(u => u.email.toLowerCase().includes(s) || u.name.toLowerCase().includes(s));
+    users = users.filter(u =>
+      u.email.toLowerCase().includes(s) ||
+      u.name.toLowerCase().includes(s)
+    );
   }
 
   const total = users.length;
   const totalPages = Math.ceil(total / perPage);
   const paginated = users.reverse().slice((page - 1) * perPage, page * perPage);
 
-  res.render('admin/users', { users: paginated, search, page, totalPages, total });
+  res.render('admin/users', {
+    users: paginated,
+    search,
+    page,
+    totalPages,
+    total
+  });
 });
 
 router.post('/users/:id/ban', (req, res) => {
@@ -308,7 +343,12 @@ router.get('/settings', (req, res) => {
 
 router.post('/settings', logoUpload.single('logoImage'), (req, res) => {
   const settings = readSettings();
-  const { siteName, siteTagline, logoText, bkashNumber, nagadNumber, rocketNumber, bkashInstructions, nagadInstructions, footerText, contactEmail, contactPhone } = req.body;
+  const {
+    siteName, siteTagline, logoText,
+    bkashNumber, nagadNumber, rocketNumber,
+    bkashInstructions, nagadInstructions,
+    footerText, contactEmail, contactPhone
+  } = req.body;
 
   const updated = {
     ...settings,
@@ -333,7 +373,11 @@ router.post('/settings', logoUpload.single('logoImage'), (req, res) => {
   res.locals.settings = updated;
   req.app.locals.settings = updated;
 
-  res.render('admin/settings', { settings: updated, error: null, success: 'সেটিংস আপডেট হয়েছে!' });
+  res.render('admin/settings', {
+    settings: updated,
+    error: null,
+    success: 'সেটিংস আপডেট হয়েছে!'
+  });
 });
 
 module.exports = router;
