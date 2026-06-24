@@ -1,0 +1,47 @@
+<%- include('../partials/admin-header', { pageTitle: 'ক্যাটাগরি', activePage: 'categories' }) %>
+
+<div class="admin-page-header">
+  <h2 class="admin-page-title">ক্যাটাগরি ম্যানেজমেন্ট</h2>
+</div>
+
+<div class="admin-card">
+  <h3>নতুন ক্যাটাগরি যোগ করুন</h3>
+  <form method="POST" action="/admin/categories/add" class="inline-form">
+    <input type="text" name="name" placeholder="ক্যাটাগরির নাম" required class="form-input" style="max-width:300px;">
+    <button type="submit" class="btn btn-primary"><i class="fas fa-plus"></i> যোগ করুন</button>
+  </form>
+</div>
+
+<div class="admin-card" style="margin-top:1.5rem;">
+  <h3>সব ক্যাটাগরি</h3>
+  <% if (categories.length === 0) { %>
+    <div class="empty-state"><i class="fas fa-tags"></i><p>কোনো ক্যাটাগরি নেই</p></div>
+  <% } else { %>
+  <div class="table-wrap">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>নাম</th>
+          <th>Slug</th>
+          <th>অ্যাকশন</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% categories.forEach(cat => { %>
+        <tr>
+          <td><strong><%= cat.name %></strong></td>
+          <td><code><%= cat.slug %></code></td>
+          <td>
+            <form method="POST" action="/admin/categories/delete/<%= cat.id %>" style="display:inline;" onsubmit="return confirm('মুছে ফেলবেন?')">
+              <button type="submit" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i> মুছুন</button>
+            </form>
+          </td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+  <% } %>
+</div>
+
+<%- include('../partials/admin-footer') %>
