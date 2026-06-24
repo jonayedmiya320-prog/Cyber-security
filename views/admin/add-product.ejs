@@ -1,0 +1,74 @@
+<%- include('../partials/admin-header', { pageTitle: 'নতুন প্রোডাক্ট', activePage: 'products' }) %>
+
+<div class="admin-page-header">
+  <h2 class="admin-page-title">নতুন প্রোডাক্ট যোগ করুন</h2>
+  <a href="/admin/products" class="btn btn-outline"><i class="fas fa-arrow-left"></i> ফিরুন</a>
+</div>
+
+<% if (error) { %>
+  <div class="alert alert-danger"><i class="fas fa-exclamation-circle"></i> <%= error %></div>
+<% } %>
+
+<div class="admin-card">
+  <form method="POST" action="/admin/products/add" enctype="multipart/form-data" class="admin-form">
+    <div class="form-row-2">
+      <div class="form-group">
+        <label>প্রোডাক্টের নাম <span class="required">*</span></label>
+        <input type="text" name="name" placeholder="প্রোডাক্টের নাম" required class="form-input">
+      </div>
+      <div class="form-group">
+        <label>ক্যাটাগরি <span class="required">*</span></label>
+        <select name="categoryId" required class="form-input">
+          <option value="">ক্যাটাগরি বেছে নিন</option>
+          <% categories.forEach(cat => { %>
+            <option value="<%= cat.id %>"><%= cat.name %></option>
+          <% }) %>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>বিবরণ</label>
+      <textarea name="description" placeholder="প্রোডাক্টের বিস্তারিত বিবরণ" rows="5" class="form-input"></textarea>
+    </div>
+
+    <div class="form-row-2">
+      <div class="form-group">
+        <label>দাম (৳) <span class="required">*</span></label>
+        <input type="number" name="price" placeholder="0.00" step="0.01" min="0" required class="form-input">
+      </div>
+      <div class="form-group">
+        <label>স্টক সংখ্যা</label>
+        <input type="number" name="stock" placeholder="0" min="0" value="1" class="form-input">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>ডাউনলোড লিংক</label>
+      <input type="text" name="downloadLink" placeholder="https://drive.google.com/..." class="form-input">
+      <small class="form-hint">প্রোডাক্টের ডাউনলোড লিংক (Google Drive, Mega, ইত্যাদি)</small>
+    </div>
+
+    <div class="form-group">
+      <label>প্রোডাক্টের ছবি</label>
+      <input type="file" name="image" accept="image/*" class="form-input" id="imageInput" onchange="previewImage(this)">
+      <div id="imagePreview" style="margin-top:0.5rem;display:none;">
+        <img id="previewImg" style="max-width:200px;border-radius:8px;">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="checkbox-label">
+        <input type="checkbox" name="active" value="on" checked>
+        <span>প্রোডাক্ট অ্যাক্টিভ রাখুন (ইউজাররা দেখতে পাবে)</span>
+      </label>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary btn-lg"><i class="fas fa-save"></i> প্রোডাক্ট সেভ করুন</button>
+      <a href="/admin/products" class="btn btn-outline btn-lg">বাতিল</a>
+    </div>
+  </form>
+</div>
+
+<%- include('../partials/admin-footer') %>
