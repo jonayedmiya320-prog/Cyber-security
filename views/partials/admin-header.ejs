@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= typeof pageTitle !== 'undefined' ? pageTitle + ' | ' : '' %>Admin - <%= settings.siteName || 'MCL' %></title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body class="admin-body">
+<div class="admin-wrapper">
+  <!-- Sidebar -->
+  <aside class="admin-sidebar" id="adminSidebar">
+    <div class="sidebar-header">
+      <% if (settings.logoImage) { %>
+        <img src="<%= settings.logoImage %>" alt="Logo" class="logo-img-sm">
+      <% } else { %>
+        <span class="logo-text-sm"><%= settings.logoText || 'MCL' %></span>
+      <% } %>
+      <span class="sidebar-brand"><%= settings.siteName || 'MCL' %></span>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="/admin" class="sidebar-link <%= typeof activePage !== 'undefined' && activePage === 'dashboard' ? 'active' : '' %>">
+        <i class="fas fa-tachometer-alt"></i> ড্যাশবোর্ড
+      </a>
+      <a href="/admin/products" class="sidebar-link <%= typeof activePage !== 'undefined' && activePage === 'products' ? 'active' : '' %>">
+        <i class="fas fa-box"></i> প্রোডাক্ট
+      </a>
+      <a href="/admin/categories" class="sidebar-link <%= typeof activePage !== 'undefined' && activePage === 'categories' ? 'active' : '' %>">
+        <i class="fas fa-tags"></i> ক্যাটাগরি
+      </a>
+      <a href="/admin/orders" class="sidebar-link <%= typeof activePage !== 'undefined' && activePage === 'orders' ? 'active' : '' %>">
+        <i class="fas fa-shopping-bag"></i> অর্ডার
+      </a>
+      <a href="/admin/users" class="sidebar-link <%= typeof activePage !== 'undefined' && activePage === 'users' ? 'active' : '' %>">
+        <i class="fas fa-users"></i> ইউজার
+      </a>
+      <a href="/admin/settings" class="sidebar-link <%= typeof activePage !== 'undefined' && activePage === 'settings' ? 'active' : '' %>">
+        <i class="fas fa-cog"></i> সেটিংস
+      </a>
+      <hr class="sidebar-divider">
+      <a href="/" class="sidebar-link"><i class="fas fa-globe"></i> সাইট দেখুন</a>
+      <a href="/auth/logout" class="sidebar-link text-danger"><i class="fas fa-sign-out-alt"></i> লগআউট</a>
+    </nav>
+  </aside>
+  <!-- Main -->
+  <div class="admin-main">
+    <header class="admin-topbar">
+      <button class="sidebar-toggle" id="sidebarToggle"><i class="fas fa-bars"></i></button>
+      <div class="topbar-right">
+        <span class="admin-name"><i class="fas fa-user-shield"></i> <%= user ? user.name : 'Admin' %></span>
+      </div>
+    </header>
+    <div class="admin-content">
