@@ -1,0 +1,66 @@
+<%- include('partials/header', { pageTitle: 'আমার অর্ডার' }) %>
+
+<section class="section">
+  <div class="container">
+    <h1 class="page-title"><i class="fas fa-list"></i> আমার অর্ডার</h1>
+    <p class="result-count">মোট <strong><%= total %></strong>টি অর্ডার</p>
+
+    <% if (orders.length === 0) { %>
+      <div class="empty-state">
+        <i class="fas fa-shopping-bag"></i>
+        <p>কোনো অর্ডার নেই</p>
+        <a href="/products" class="btn btn-primary">কেনাকাটা করুন</a>
+      </div>
+    <% } else { %>
+    <div class="table-wrap">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>অর্ডার ID</th>
+            <th>আইটেম</th>
+            <th>মোট</th>
+            <th>পেমেন্ট</th>
+            <th>স্ট্যাটাস</th>
+            <th>তারিখ</th>
+            <th>অ্যাকশন</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% orders.forEach(order => { %>
+          <tr>
+            <td><code><%= order.id.substring(0,8) %></code></td>
+            <td><%= order.items.length %>টি</td>
+            <td>৳ <%= order.total %></td>
+            <td><span class="badge badge-info"><%= order.paymentMethod %></span></td>
+            <td>
+              <span class="badge badge-<%= order.status === 'approved' ? 'success' : order.status === 'rejected' ? 'danger' : 'warning' %>">
+                <%= order.status === 'approved' ? 'অ্যাপ্রুভড' : order.status === 'rejected' ? 'বাতিল' : 'অপেক্ষমান' %>
+              </span>
+            </td>
+            <td><%= new Date(order.createdAt).toLocaleDateString('bn-BD') %></td>
+            <td><a href="/dashboard/orders/<%= order.id %>" class="btn btn-sm btn-outline">বিস্তারিত</a></td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    <% if (totalPages > 1) { %>
+    <div class="pagination">
+      <% if (page > 1) { %>
+        <a href="/dashboard/orders?page=<%= page-1 %>" class="page-btn"><i class="fas fa-chevron-left"></i></a>
+      <% } %>
+      <% for(let i = 1; i <= totalPages; i++) { %>
+        <a href="/dashboard/orders?page=<%= i %>" class="page-btn <%= i === page ? 'active' : '' %>"><%= i %></a>
+      <% } %>
+      <% if (page < totalPages) { %>
+        <a href="/dashboard/orders?page=<%= page+1 %>" class="page-btn"><i class="fas fa-chevron-right"></i></a>
+      <% } %>
+    </div>
+    <% } %>
+    <% } %>
+  </div>
+</section>
+
+<%- include('partials/footer') %>
