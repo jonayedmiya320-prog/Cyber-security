@@ -1,0 +1,92 @@
+<%- include('../partials/admin-header', { pageTitle: 'প্রোডাক্ট', activePage: 'products' }) %>
+
+<div class="admin-page-header">
+  <h2 class="admin-page-title">প্রোডাক্ট ম্যানেজমেন্ট</h2>
+  <a href="/admin/products/add" class="btn btn-primary"><i class="fas fa-plus"></i> নতুন প্রোডাক্ট</a>
+</div>
+
+<% if (req && req.query && req.query.success) { %>
+  <div class="alert alert-success"><i class="fas fa-check-circle"></i> প্রোডাক্ট সফলভাবে সেভ হয়েছে!</div>
+<% } %>
+
+<div class="admin-card">
+  <form class="search-form" method="GET" action="/admin/products">
+    <div class="search-row">
+      <input type="text" name="search" value="<%= search %>" placeholder="প্রোডাক্ট খুঁজুন..." class="search-input">
+      <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i> খুঁজুন</button>
+      <% if (search) { %><a href="/admin/products" class="btn btn-outline">রিসেট</a><% } %>
+    </div>
+  </form>
+
+  <p class="result-count">মোট <strong><%= total %></strong>টি প্রোডাক্ট</p>
+
+  <% if (products.length === 0) { %>
+    <div class="empty-state"><i class="fas fa-box-open"></i><p>কোনো প্রোডাক্ট নেই</p></div>
+  <% } else { %>
+  <div class="table-wrap">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>ছবি</th>
+          <th>নাম</th>
+          <th>দাম</th>
+          <th>স্টক</th>
+          <th>ক্যাটাগরি</th>
+          <th>অ্যাক্টিভ</th>
+          <th>অ্যাকশন</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% products.forEach(product => { %>
+        <tr>
+          <td>
+            <% if (product.image) { %>
+              <img src="<%= product.image %>" style="width:50px;height:50px;object-fit:cover;border-radius:6px;">
+            <% } else { %>
+              <div style="width:50px;height:50px;background:#eee;border-radius:6px;display:flex;align-items:center;justify-content:center;"><i class="fas fa-cube"></i></div>
+            <% } %>
+          </td>
+          <td><strong><%= product.name %></strong></td>
+          <td>৳ <%= product.price %></td>
+          <td><span class="badge <%= product.stock > 0 ? 'badge-success' : 'badge-danger' %>"><%= product.stock %></span></td>
+          <td>
+            <% const cat = categories.find(c => c.id === product.categoryId); %>
+            <%= cat ? cat.name : '-' %>
+          </td>
+          <td>
+            <form method="POST" action="/admin/products/toggle/<%= product.id %>">
+              <button type="submit" class="badge <%= product.active ? 'badge-success' : 'badge-danger' %>" style="cursor:pointer;border:none;">
+                <%= product.active ? 'হ্যাঁ' : 'না' %>
+              </button>
+            </form>
+          </td>
+          <td class="action-btns">
+            <a href="/admin/products/edit/<%= product.id %>" class="btn btn-sm btn-outline"><i class="fas fa-edit"></i></a>
+            <form method="POST" action="/admin/products/delete/<%= product.id %>" style="display:inline;" onsubmit="return confirm('মুছে ফেলবেন?')">
+              <button type="submit" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+            </form>
+          </td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination -->
+  <% if (totalPages > 1) { %>
+  <div class="pagination">
+    <% if (page > 1) { %>
+      <a href="/admin/products?page=<%= page-1 %>&search=<%= search %>" class="page-btn"><i class="fas fa-chevron-left"></i></a>
+    <% } %>
+    <% for(let i = 1; i <= totalPages; i++) { %>
+      <a href="/admin/products?page=<%= i %>&search=<%= search %>" class="page-btn <%= i === page ? 'active' : '' %>"><%= i %></a>
+    <% } %>
+    <% if (page < totalPages) { %>
+      <a href="/admin/products?page=<%= page+1 %>&search=<%= search %>" class="page-btn"><i class="fas fa-chevron-right"></i></a>
+    <% } %>
+  </div>
+  <% } %>
+  <% } %>
+</div>
+
+<%- include('../partials/admin-footer') %>
