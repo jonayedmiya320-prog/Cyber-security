@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>প্রথম সেটআপ - MYMENSINGH CYBER LAB</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    body { background: linear-gradient(135deg, #0f0c29, #302b63, #24243e); min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+    .setup-card { background: #fff; border-radius: 16px; padding: 2.5rem; max-width: 480px; width: 100%; box-shadow: 0 20px 60px rgba(0,0,0,0.4); }
+    .setup-logo { text-align: center; margin-bottom: 1.5rem; }
+    .setup-logo h1 { font-size: 1.8rem; font-weight: 800; background: linear-gradient(135deg, #6c63ff, #e040fb); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .setup-logo p { color: #888; margin-top: 0.3rem; }
+    .setup-badge { background: #fff3cd; border: 1px solid #ffc107; color: #856404; padding: 0.75rem 1rem; border-radius: 8px; margin-bottom: 1.5rem; font-size: 0.9rem; display: flex; gap: 0.5rem; align-items: flex-start; }
+  </style>
+</head>
+<body>
+<div class="setup-card">
+  <div class="setup-logo">
+    <i class="fas fa-shield-alt" style="font-size:2.5rem; color:#6c63ff; margin-bottom:0.5rem;"></i>
+    <h1>MYMENSINGH CYBER LAB</h1>
+    <p>প্রথম সেটআপ — অ্যাডমিন অ্যাকাউন্ট তৈরি করুন</p>
+  </div>
+
+  <div class="setup-badge">
+    <i class="fas fa-exclamation-triangle"></i>
+    <span>এই পেজটি শুধুমাত্র একবারই ব্যবহার করা যাবে। অ্যাডমিন তৈরির পর এটি চিরতরে বন্ধ হয়ে যাবে।</span>
+  </div>
+
+  <% if (error) { %>
+    <div class="alert alert-danger"><i class="fas fa-exclamation-circle"></i> <%= error %></div>
+  <% } %>
+
+  <form method="POST" action="/setup" class="auth-form">
+    <div class="form-group">
+      <label>অ্যাডমিনের নাম</label>
+      <input type="text" name="name" placeholder="আপনার নাম" required class="form-input">
+    </div>
+    <div class="form-group">
+      <label>ইমেইল</label>
+      <input type="email" name="email" placeholder="admin@example.com" required class="form-input">
+    </div>
+    <div class="form-group">
+      <label>ফোন নম্বর</label>
+      <input type="text" name="phone" placeholder="01XXXXXXXXX" required class="form-input">
+    </div>
+    <div class="form-group">
+      <label>পাসওয়ার্ড</label>
+      <div class="input-eye-wrap">
+        <input type="password" name="password" id="setupPass" placeholder="শক্তিশালী পাসওয়ার্ড দিন" required class="form-input">
+        <button type="button" class="eye-btn" onclick="togglePassword('setupPass')"><i class="fas fa-eye"></i></button>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>পাসওয়ার্ড নিশ্চিত করুন</label>
+      <input type="password" name="confirm_password" placeholder="পুনরায় পাসওয়ার্ড দিন" required class="form-input">
+    </div>
+    <button type="submit" class="btn btn-primary btn-block btn-lg">
+      <i class="fas fa-rocket"></i> অ্যাডমিন তৈরি করুন ও সাইট চালু করুন
+    </button>
+  </form>
+</div>
+<script>
+function togglePassword(id) {
+  const input = document.getElementById(id);
+  input.type = input.type === 'password' ? 'text' : 'password';
+}
+</script>
+</body>
+</html>
