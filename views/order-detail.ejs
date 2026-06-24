@@ -1,0 +1,70 @@
+<%- include('partials/header', { pageTitle: 'অর্ডার বিবরণ' }) %>
+
+<section class="section">
+  <div class="container">
+    <div class="breadcrumb">
+      <a href="/dashboard">ড্যাশবোর্ড</a> &rsaquo;
+      <a href="/dashboard/orders">অর্ডার</a> &rsaquo;
+      <span><%= order.id.substring(0,8) %></span>
+    </div>
+
+    <h1 class="page-title">অর্ডার বিবরণ</h1>
+
+    <div class="order-detail-grid">
+      <div class="order-info-card">
+        <h3>অর্ডার তথ্য</h3>
+        <table class="info-table">
+          <tr><td>অর্ডার ID</td><td><code><%= order.id %></code></td></tr>
+          <tr><td>তারিখ</td><td><%= new Date(order.createdAt).toLocaleString('bn-BD') %></td></tr>
+          <tr><td>পেমেন্ট মাধ্যম</td><td><%= order.paymentMethod %></td></tr>
+          <tr><td>Transaction ID</td><td><code><%= order.transactionId %></code></td></tr>
+          <tr><td>প্রেরকের নম্বর</td><td><%= order.senderNumber %></td></tr>
+          <tr><td>মোট মূল্য</td><td><strong>৳ <%= order.total %></strong></td></tr>
+          <tr>
+            <td>স্ট্যাটাস</td>
+            <td>
+              <span class="badge badge-<%= order.status === 'approved' ? 'success' : order.status === 'rejected' ? 'danger' : 'warning' %>">
+                <%= order.status === 'approved' ? 'অ্যাপ্রুভড' : order.status === 'rejected' ? 'বাতিল' : 'অপেক্ষমান' %>
+              </span>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="order-items-card">
+        <h3>অর্ডার আইটেম</h3>
+        <% order.items.forEach(item => { %>
+        <div class="checkout-item">
+          <span><%= item.name %></span>
+          <span>৳ <%= item.price %></span>
+        </div>
+        <% }) %>
+
+        <% if (order.status === 'rejected' && order.rejectReason) { %>
+          <div class="alert alert-danger" style="margin-top:1rem;">
+            <strong>বাতিলের কারণ:</strong> <%= order.rejectReason %>
+          </div>
+        <% } %>
+
+        <% if (order.status === 'approved' && order.downloadLinks && order.downloadLinks.length > 0) { %>
+          <div class="download-section">
+            <h4><i class="fas fa-download"></i> ডাউনলোড লিংক</h4>
+            <% order.downloadLinks.forEach((link, i) => { %>
+              <a href="<%= link %>" target="_blank" class="btn btn-primary btn-block" style="margin-bottom:0.5rem;">
+                <i class="fas fa-download"></i> ডাউনলোড করুন <%= i + 1 %>
+              </a>
+            <% }) %>
+          </div>
+        <% } else if (order.status === 'pending') { %>
+          <div class="alert alert-warning" style="margin-top:1rem;">
+            <i class="fas fa-clock"></i> অ্যাডমিন যাচাই করছেন। একটু অপেক্ষা করুন।
+          </div>
+        <% } %>
+      </div>
+    </div>
+
+    <a href="/dashboard/orders" class="btn btn-outline" style="margin-top:1rem;"><i class="fas fa-arrow-left"></i> ফিরে যান</a>
+  </div>
+</section>
+
+<%- include('partials/footer') %>
