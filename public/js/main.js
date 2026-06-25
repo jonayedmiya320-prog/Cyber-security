@@ -1,10 +1,25 @@
-// Hamburger menu
+// Mobile Menu
 const hamburger = document.getElementById('hamburger');
-const navLinks = document.getElementById('navLinks');
-if (hamburger && navLinks) {
+const mobileMenu = document.getElementById('mobileMenu');
+
+if (hamburger && mobileMenu) {
   hamburger.addEventListener('click', () => {
-    navLinks.classList.toggle('open');
+    mobileMenu.classList.toggle('open');
+    const icon = hamburger.querySelector('i');
+    if (mobileMenu.classList.contains('open')) {
+      icon.className = 'fas fa-times';
+    } else {
+      icon.className = 'fas fa-bars';
+    }
   });
+}
+
+function closeMobileMenu() {
+  if (mobileMenu) {
+    mobileMenu.classList.remove('open');
+    const icon = hamburger.querySelector('i');
+    if (icon) icon.className = 'fas fa-bars';
+  }
 }
 
 // Password toggle
