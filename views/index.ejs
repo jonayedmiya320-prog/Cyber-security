@@ -1,74 +1,141 @@
 <%- include('partials/header', { pageTitle: 'হোম' }) %>
 
-<!-- Hero -->
+<!-- Hero Section -->
 <section class="hero">
-  <div class="container hero-inner">
-    <div class="hero-text">
-      <h1 class="hero-title"><%= settings.siteName || 'MYMENSINGH CYBER LAB' %></h1>
-      <p class="hero-subtitle"><%= settings.siteTagline || 'আপনার ডিজিটাল মার্কেটপ্লেস' %></p>
-      <p class="hero-desc">সোর্স কোড, বই, টেমপ্লেট এবং আরো অনেক ডিজিটাল প্রোডাক্ট পাবেন এখানে।</p>
-      <div class="hero-btns">
-        <a href="/products" class="btn btn-primary btn-lg">প্রোডাক্ট দেখুন</a>
-        <% if (!user) { %>
-          <a href="/auth/register" class="btn btn-outline btn-lg">রেজিস্টার করুন</a>
-        <% } %>
+  <div class="container">
+    <div class="hero-inner">
+      <div class="hero-left">
+        <div class="hero-badge-top">
+          <span class="dot"></span> LEARN &rsaquo; PRACTICE &rsaquo; MASTER
+        </div>
+        <h1 class="hero-title">
+          ডিজিটাল প্রোডাক্ট<br>
+          <span class="hero-title-green">মার্কেটপ্লেস</span>
+        </h1>
+        <p class="hero-desc">
+          সোর্স কোড, বই, টেমপ্লেট এবং সাইবার সিকিউরিটি টুলস পাবেন এখানে।
+          বাংলাদেশের সেরা ডিজিটাল মার্কেটপ্লেস।
+        </p>
+        <div class="hero-btns">
+          <a href="/products" class="btn-hero-primary">প্রোডাক্ট দেখুন <i class="fas fa-arrow-right"></i></a>
+          <a href="/auth/register" class="btn-hero-outline">রেজিস্টার করুন <i class="fas fa-th"></i></a>
+        </div>
+        <div class="hero-trust">
+          <div class="trust-avatars">
+            <div class="avatar">U</div>
+            <div class="avatar">S</div>
+            <div class="avatar">E</div>
+            <div class="avatar">R</div>
+          </div>
+          <div class="trust-text">
+            <strong>১০০০+</strong><br>
+            <span>সন্তুষ্ট কাস্টমার</span>
+          </div>
+        </div>
       </div>
-    </div>
-    <div class="hero-image">
-      <div class="hero-badge">
-        <i class="fas fa-shield-alt"></i>
-        <span>নিরাপদ ও বিশ্বস্ত</span>
+      <div class="hero-right">
+        <div class="hero-img-wrap">
+          <div class="hacker-circle">
+            <i class="fas fa-user-secret hacker-icon"></i>
+            <div class="orbit-badge ob1">WEB SECURITY</div>
+            <div class="orbit-badge ob2">PENETRATION TESTING</div>
+            <div class="orbit-badge ob3">BUG BOUNTY</div>
+            <div class="orbit-badge ob4">LINUX</div>
+            <div class="orbit-badge ob5">NETWORKING</div>
+            <div class="logo-circle">
+              <span>MCL</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- Categories -->
-<% if (categories.length > 0) { %>
+<!-- Stats Bar -->
+<section class="stats-bar">
+  <div class="container">
+    <div class="stats-bar-grid">
+      <div class="stats-bar-item">
+        <i class="fas fa-users"></i>
+        <div>
+          <strong>১০০০+</strong>
+          <span>অ্যাক্টিভ ইউজার</span>
+        </div>
+      </div>
+      <div class="stats-bar-item">
+        <i class="fas fa-box"></i>
+        <div>
+          <strong>৫০০+</strong>
+          <span>প্রিমিয়াম প্রোডাক্ট</span>
+        </div>
+      </div>
+      <div class="stats-bar-item">
+        <i class="fas fa-download"></i>
+        <div>
+          <strong>Lifetime</strong>
+          <span>অ্যাক্সেস</span>
+        </div>
+      </div>
+      <div class="stats-bar-item">
+        <i class="fas fa-certificate"></i>
+        <div>
+          <strong>Verified</strong>
+          <span>প্রোডাক্ট</span>
+        </div>
+      </div>
+      <div class="stats-bar-item">
+        <i class="fas fa-headset"></i>
+        <div>
+          <strong>২৪/৭</strong>
+          <span>লাইভ সাপোর্ট</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Popular Products -->
 <section class="section">
   <div class="container">
-    <h2 class="section-title">ক্যাটাগরি</h2>
-    <div class="category-grid">
-      <% categories.forEach(cat => { %>
-      <a href="/products?category=<%= cat.id %>" class="category-card">
-        <i class="fas fa-folder"></i>
-        <span><%= cat.name %></span>
-      </a>
-      <% }) %>
-    </div>
-  </div>
-</section>
-<% } %>
-
-<!-- Featured Products -->
-<section class="section section-dark">
-  <div class="container">
+    <div class="section-label">POPULAR PRODUCTS</div>
     <div class="section-header">
-      <h2 class="section-title">সাম্প্রতিক প্রোডাক্ট</h2>
-      <a href="/products" class="btn btn-outline">সব দেখুন</a>
+      <h2 class="section-heading">আমাদের জনপ্রিয় প্রোডাক্ট</h2>
+      <a href="/products" class="btn-view-all">সব দেখুন <i class="fas fa-arrow-right"></i></a>
     </div>
+
     <% if (products.length === 0) { %>
       <div class="empty-state">
         <i class="fas fa-box-open"></i>
         <p>এখনো কোনো প্রোডাক্ট নেই</p>
       </div>
     <% } else { %>
-    <div class="product-grid">
+    <div class="product-grid-new">
       <% products.forEach(product => { %>
-      <div class="product-card">
-        <div class="product-img-wrap">
+      <div class="product-card-new">
+        <div class="product-card-img">
           <% if (product.image) { %>
-            <img src="<%= product.image %>" alt="<%= product.name %>" class="product-img">
+            <img src="<%= product.image %>" alt="<%= product.name %>">
           <% } else { %>
-            <div class="product-img-placeholder"><i class="fas fa-cube"></i></div>
+            <div class="product-card-placeholder">
+              <i class="fas fa-cube"></i>
+            </div>
+          <% } %>
+          <% if (product.stock > 0) { %>
+            <span class="card-badge-top">IN STOCK</span>
+          <% } else { %>
+            <span class="card-badge-top badge-red">OUT</span>
           <% } %>
         </div>
-        <div class="product-body">
-          <h3 class="product-name"><%= product.name %></h3>
-          <p class="product-desc"><%= product.description ? product.description.substring(0, 80) + '...' : '' %></p>
-          <div class="product-footer">
-            <span class="product-price">৳ <%= product.price %></span>
-            <a href="/products/<%= product.id %>" class="btn btn-primary btn-sm">বিস্তারিত</a>
+        <div class="product-card-body">
+          <h3 class="product-card-name"><%= product.name %></h3>
+          <div class="product-card-meta">
+            <span><i class="fas fa-shield-alt"></i> MCL</span>
+            <span><i class="fas fa-box"></i> স্টক: <%= product.stock %></span>
+          </div>
+          <div class="product-card-footer">
+            <span class="product-card-price">৳ <%= product.price %></span>
+            <a href="/products/<%= product.id %>" class="btn-view-course">বিস্তারিত</a>
           </div>
         </div>
       </div>
@@ -78,30 +145,95 @@
   </div>
 </section>
 
+<!-- Categories -->
+<section class="section section-dark-2">
+  <div class="container">
+    <div class="section-label">BROWSE CATEGORIES</div>
+    <h2 class="section-heading" style="margin-bottom:2rem;">সব ক্যাটাগরি ব্রাউজ করুন</h2>
+
+    <% if (categories.length === 0) { %>
+      <div class="empty-state"><i class="fas fa-tags"></i><p>কোনো ক্যাটাগরি নেই</p></div>
+    <% } else { %>
+    <div class="cat-grid-new">
+      <% const catIcons = ['fas fa-code', 'fas fa-book', 'fas fa-wrench', 'fas fa-layer-group', 'fas fa-terminal', 'fas fa-play-circle']; %>
+      <% categories.forEach((cat, i) => { %>
+      <a href="/products?category=<%= cat.id %>" class="cat-card-new">
+        <div class="cat-icon">
+          <i class="<%= catIcons[i % catIcons.length] %>"></i>
+        </div>
+        <h3><%= cat.name %></h3>
+        <p>আইটেম দেখুন</p>
+      </a>
+      <% }) %>
+    </div>
+    <% } %>
+  </div>
+</section>
+
 <!-- Features -->
 <section class="section">
   <div class="container">
-    <h2 class="section-title">কেন আমাদের বেছে নেবেন?</h2>
-    <div class="features-grid">
-      <div class="feature-card">
-        <i class="fas fa-lock"></i>
+    <div class="section-label">WHY CHOOSE US</div>
+    <h2 class="section-heading" style="margin-bottom:2rem;">কেন আমাদের বেছে নেবেন?</h2>
+    <div class="features-grid-new">
+      <div class="feature-card-new">
+        <div class="feature-icon"><i class="fas fa-lock"></i></div>
         <h3>নিরাপদ পেমেন্ট</h3>
-        <p>বিকাশ ও নগদের মাধ্যমে সহজ ও নিরাপদ পেমেন্ট।</p>
+        <p>বিকাশ ও নগদের মাধ্যমে সহজ ও নিরাপদ পেমেন্ট সিস্টেম।</p>
       </div>
-      <div class="feature-card">
-        <i class="fas fa-download"></i>
+      <div class="feature-card-new">
+        <div class="feature-icon"><i class="fas fa-download"></i></div>
         <h3>তাৎক্ষণিক ডাউনলোড</h3>
-        <p>পেমেন্ট অ্যাপ্রুভের পরপরই ডাউনলোড লিংক পাবেন।</p>
+        <p>পেমেন্ট অ্যাপ্রুভের পরপরই ওয়েবসাইট থেকে ডাউনলোড করুন।</p>
       </div>
-      <div class="feature-card">
-        <i class="fas fa-headset"></i>
-        <h3>সার্বক্ষণিক সাপোর্ট</h3>
-        <p>যেকোনো সমস্যায় আমরা পাশে আছি।</p>
+      <div class="feature-card-new">
+        <div class="feature-icon"><i class="fas fa-headset"></i></div>
+        <h3>২৪/৭ সাপোর্ট</h3>
+        <p>লাইভ চ্যাটের মাধ্যমে যেকোনো সমস্যায় সাথে আছি।</p>
       </div>
-      <div class="feature-card">
-        <i class="fas fa-check-circle"></i>
-        <h3>মানসম্পন্ন প্রোডাক্ট</h3>
-        <p>সব প্রোডাক্ট যাচাই-বাছাই করা ও আপডেটেড।</p>
+      <div class="feature-card-new">
+        <div class="feature-icon"><i class="fas fa-check-circle"></i></div>
+        <h3>ভেরিফাইড প্রোডাক্ট</h3>
+        <p>সব প্রোডাক্ট যাচাই করা ও সর্বশেষ আপডেটেড।</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer Extra -->
+<section class="footer-cta">
+  <div class="container">
+    <div class="footer-cta-inner">
+      <div class="footer-cta-left">
+        <div class="footer-logo-big">
+          <span class="logo-text">MCL</span>
+          <div>
+            <strong>MYMENSINGH CYBER LAB</strong>
+            <p>Empowering the next generation of digital creators</p>
+          </div>
+        </div>
+        <div class="footer-social">
+          <a href="#"><i class="fab fa-facebook"></i></a>
+          <a href="#"><i class="fab fa-youtube"></i></a>
+          <a href="#"><i class="fab fa-telegram"></i></a>
+          <a href="#"><i class="fab fa-github"></i></a>
+        </div>
+      </div>
+      <div class="footer-cta-links">
+        <div class="footer-link-group">
+          <h4>Quick Links</h4>
+          <a href="/">Home <i class="fas fa-arrow-right"></i></a>
+          <a href="/products">Products <i class="fas fa-arrow-right"></i></a>
+          <a href="/auth/register">Register <i class="fas fa-arrow-right"></i></a>
+          <a href="/support">Support <i class="fas fa-arrow-right"></i></a>
+        </div>
+        <div class="footer-link-group">
+          <h4>Support</h4>
+          <a href="/support">Help Center <i class="fas fa-arrow-right"></i></a>
+          <a href="#">Privacy Policy <i class="fas fa-arrow-right"></i></a>
+          <a href="#">Refund Policy <i class="fas fa-arrow-right"></i></a>
+          <a href="#">FAQ <i class="fas fa-arrow-right"></i></a>
+        </div>
       </div>
     </div>
   </div>
