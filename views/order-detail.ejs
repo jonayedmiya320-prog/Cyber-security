@@ -46,12 +46,12 @@
           </div>
         <% } %>
 
-        <% if (order.status === 'approved' && order.downloadLinks && order.downloadLinks.length > 0) { %>
+        <% if (order.status === 'approved') { %>
           <div class="download-section">
-            <h4><i class="fas fa-download"></i> ডাউনলোড লিংক</h4>
-            <% order.downloadLinks.forEach((link, i) => { %>
-              <a href="<%= link %>" target="_blank" class="btn btn-primary btn-block" style="margin-bottom:0.5rem;">
-                <i class="fas fa-download"></i> ডাউনলোড করুন <%= i + 1 %>
+            <h4><i class="fas fa-download"></i> আপনার ফাইল ডাউনলোড করুন</h4>
+            <% order.items.forEach((item, i) => { %>
+              <a href="/dashboard/download/<%= item.productId %>" class="btn btn-primary btn-block" style="margin-bottom:0.5rem;">
+                <i class="fas fa-download"></i> <%= item.name %> ডাউনলোড করুন
               </a>
             <% }) %>
           </div>
@@ -63,7 +63,9 @@
       </div>
     </div>
 
-    <a href="/dashboard/orders" class="btn btn-outline" style="margin-top:1rem;"><i class="fas fa-arrow-left"></i> ফিরে যান</a>
+    <a href="/dashboard/orders" class="btn btn-outline" style="margin-top:1rem;">
+      <i class="fas fa-arrow-left"></i> ফিরে যান
+    </a>
   </div>
 </section>
 
