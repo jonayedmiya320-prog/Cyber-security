@@ -10,11 +10,10 @@ router.get('/', (req, res) => {
   res.render('index', { products: featured, categories });
 });
 
-// GET /products - All products with pagination & search
+// GET /products
 router.get('/products', (req, res) => {
   let products = readJSON('products.json').filter(p => p.active);
   const categories = readJSON('categories.json');
-
   const search = req.query.search || '';
   const category = req.query.category || '';
   const page = parseInt(req.query.page) || 1;
@@ -27,7 +26,6 @@ router.get('/products', (req, res) => {
       p.description.toLowerCase().includes(s)
     );
   }
-
   if (category) {
     products = products.filter(p => p.categoryId === category);
   }
@@ -37,22 +35,20 @@ router.get('/products', (req, res) => {
   const paginated = products.slice((page - 1) * perPage, page * perPage);
 
   res.render('products', {
-    products: paginated,
-    categories,
-    search,
-    category,
-    page,
-    totalPages,
-    total
+    products: paginated, categories,
+    search, category, page, totalPages, total
   });
 });
 
-// GET /products/:id - Product detail
+// GET /products/:id
 router.get('/products/:id', (req, res) => {
   const products = readJSON('products.json');
   const product = products.find(p => p.id === req.params.id && p.active);
   if (!product) {
-    return res.status(404).render('error', { message: 'প্রোডাক্ট পাওয়া যায়নি', settings: res.locals.settings });
+    return res.status(404).render('error', {
+      message: 'প্রোডাক্ট পাওয়া যায়নি',
+      settings: res.locals.settings
+    });
   }
   const categories = readJSON('categories.json');
   const cat = categories.find(c => c.id === product.categoryId);
@@ -61,22 +57,21 @@ router.get('/products/:id', (req, res) => {
 
 // POST /cart/add
 router.post('/cart/add', (req, res) => {
-  if (!req.session.user) {
-    return res.redirect('/auth/login');
-  }
+  if (!req.session.user) return res.redirect('/auth/login');
   const { productId } = req.body;
   const products = readJSON('products.json');
   const product = products.find(p => p.id === productId && p.active);
-  if (!product) {
-    return res.redirect('/products');
-  }
-
+  if (!product) return res.redirect('/products');
   if (!req.session.cart) req.session.cart = [];
   const exists = req.session.cart.find(i => i.productId === productId);
   if (!exists) {
-    req.session.cart.push({ productId, name: product.name, price: product.price, image: product.image });
+    req.session.cart.push({
+      productId,
+      name: product.name,
+      price: product.price,
+      image: product.image
+    });
   }
-
   res.redirect('/cart');
 });
 
@@ -100,17 +95,16 @@ router.get('/checkout', (req, res) => {
   if (!req.session.user) return res.redirect('/auth/login');
   const cart = req.session.cart || [];
   if (cart.length === 0) return res.redirect('/cart');
-
   const settings = readSettings();
   const orders = readJSON('orders.json');
-
-  // Check pending order
   const pendingOrder = orders.find(o =>
-    o.userId === req.session.user.id &&
-    o.status === 'pending'
+    o.userId === req.session.user.id && o.status === 'pending'
   );
-
-  res.render('checkout', { cart, settings, pendingOrder: pendingOrder || null, error: null, success: null });
+  res.render('checkout', {
+    cart, settings,
+    pendingOrder: pendingOrder || null,
+    error: null, success: null
+  });
 });
 
 // POST /checkout
@@ -118,17 +112,14 @@ router.post('/checkout', (req, res) => {
   if (!req.session.user) return res.redirect('/auth/login');
   const cart = req.session.cart || [];
   if (cart.length === 0) return res.redirect('/cart');
-
   const settings = readSettings();
   const { payment_method, transaction_id, sender_number } = req.body;
   const orders = readJSON('orders.json');
 
-  // Check pending order
+  // Pending অর্ডার চেক
   const pendingOrder = orders.find(o =>
-    o.userId === req.session.user.id &&
-    o.status === 'pending'
+    o.userId === req.session.user.id && o.status === 'pending'
   );
-
   if (pendingOrder) {
     return res.render('checkout', {
       cart, settings, pendingOrder,
@@ -145,7 +136,7 @@ router.post('/checkout', (req, res) => {
     });
   }
 
-  // Duplicate transaction ID check
+  // Duplicate Transaction ID চেক
   const dupTxn = orders.find(o => o.transactionId === transaction_id.trim());
   if (dupTxn) {
     return res.render('checkout', {
@@ -156,36 +147,40 @@ router.post('/checkout', (req, res) => {
   }
 
   const total = cart.reduce((sum, i) => sum + parseFloat(i.price), 0);
-
   const { v4: uuidv4 } = require('uuid');
+  const { writeJSON } = require('../middleware/db');
+
   const newOrder = {
     id: uuidv4(),
     userId: req.session.user.id,
     userName: req.session.user.name,
     userEmail: req.session.user.email,
-    userPhone: req.session.user.phone,
+    userPhone: req.session.user.phone || '',
     items: cart,
     total,
     paymentMethod: payment_method,
     transactionId: transaction_id.trim(),
     senderNumber: sender_number.trim(),
     status: 'pending',
-    downloadLinks: [],
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString()
   };
 
   orders.push(newOrder);
-  const { writeJSON } = require('../middleware/db');
   writeJSON('orders.json', orders);
-
   req.session.cart = [];
 
   res.render('checkout', {
     cart: [], settings, pendingOrder: null,
     error: null,
-    success: 'অর্ডার সফলভাবে জমা হয়েছে! অ্যাডমিন অ্যাপ্রুভ করলে ডাউনলোড লিংক পাবেন।'
+    success: 'অর্ডার সফলভাবে জমা হয়েছে! অ্যাডমিন অ্যাপ্রুভ করলে ডাউনলোড করতে পারবেন।'
   });
+});
+
+// GET /support - Live Chat
+router.get('/support', (req, res) => {
+  if (!req.session.user) return res.redirect('/auth/login');
+  res.render('chat');
 });
 
 module.exports = router;
