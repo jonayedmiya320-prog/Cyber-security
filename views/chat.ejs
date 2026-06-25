@@ -3,9 +3,10 @@
 <section class="section">
   <div class="container">
     <h1 class="page-title"><i class="fas fa-headset"></i> লাইভ সাপোর্ট</h1>
+    <p style="color:#666; margin-bottom:1.5rem;">আমাদের সাপোর্ট টিম সাহায্য করতে প্রস্তুত। নিচে আপনার বার্তা লিখুন।</p>
 
     <div class="chat-wrapper">
-      <div class="chat-box" id="chatBox">
+      <div class="chat-box">
         <div class="chat-messages" id="chatMessages">
           <div class="chat-welcome">
             <i class="fas fa-headset"></i>
@@ -40,6 +41,9 @@ socket.on('newMessage', (msg) => {
 });
 
 function addMessage(msg) {
+  const welcome = document.querySelector('.chat-welcome');
+  if (welcome) welcome.remove();
+
   const div = document.createElement('div');
   div.className = 'chat-msg ' + (msg.from === 'user' ? 'chat-msg-user' : 'chat-msg-admin');
   div.innerHTML = `
