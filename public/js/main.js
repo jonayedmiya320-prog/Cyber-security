@@ -17,7 +17,7 @@ if (hamburger && mobileMenu) {
 function closeMobileMenu() {
   if (mobileMenu) {
     mobileMenu.classList.remove('open');
-    const icon = hamburger.querySelector('i');
+    const icon = hamburger ? hamburger.querySelector('i') : null;
     if (icon) icon.className = 'fas fa-bars';
   }
 }
