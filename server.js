@@ -6,34 +6,27 @@ const path = require('path');
 const fs = require('fs');
 const http = require('http');
 const { Server } = require('socket.io');
-const { readSettings, readJSON, writeJSON } = require('./middleware/db');
+const { readSettings } = require('./middleware/db');
 
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 const PORT = process.env.PORT || 3000;
 
-// Security
 app.use(helmet({ contentSecurityPolicy: false }));
 
-// Rate limiting
 const limiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 300 });
 app.use(limiter);
 const authLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 10 });
 
-// Body parser
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-
-// Static files
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// View engine
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-// Session
 app.use(session({
   secret: process.env.SESSION_SECRET || 'mcl-super-secret-2025-xk9z',
   resave: false,
@@ -41,7 +34,6 @@ app.use(session({
   cookie: { secure: false, httpOnly: true, maxAge: 24 * 60 * 60 * 1000 }
 }));
 
-// Load settings
 app.use((req, res, next) => {
   const settings = readSettings();
   app.locals.settings = settings;
@@ -50,7 +42,6 @@ app.use((req, res, next) => {
   next();
 });
 
-// Ensure uploads dir
 if (!fs.existsSync(path.join(__dirname, 'uploads'))) {
   fs.mkdirSync(path.join(__dirname, 'uploads'), { recursive: true });
 }
@@ -69,23 +60,16 @@ app.use('/admin', require('./routes/admin'));
 const chatMessages = {};
 
 io.on('connection', (socket) => {
-  // Join room
   socket.on('joinRoom', ({ userId, userName, isAdmin }) => {
     socket.join(userId);
     socket.userId = userId;
     socket.userName = userName;
     socket.isAdmin = isAdmin;
-
-    if (isAdmin) {
-      socket.join('admin');
-    }
-
-    // Send old messages
+    if (isAdmin) socket.join('admin');
     const msgs = chatMessages[userId] || [];
     socket.emit('loadMessages', msgs);
   });
 
-  // User sends message
   socket.on('userMessage', ({ userId, userName, message }) => {
     const msg = {
       from: 'user',
@@ -95,14 +79,10 @@ io.on('connection', (socket) => {
     };
     if (!chatMessages[userId]) chatMessages[userId] = [];
     chatMessages[userId].push(msg);
-
-    // Send to user
     io.to(userId).emit('newMessage', msg);
-    // Send to all admins
     io.to('admin').emit('newUserMessage', { userId, userName, msg });
   });
 
-  // Admin sends message
   socket.on('adminMessage', ({ userId, message }) => {
     const msg = {
       from: 'admin',
@@ -112,14 +92,10 @@ io.on('connection', (socket) => {
     };
     if (!chatMessages[userId]) chatMessages[userId] = [];
     chatMessages[userId].push(msg);
-
-    // Send to user
     io.to(userId).emit('newMessage', msg);
-    // Send to admin
-    socket.emit('newMessage', msg);
+    socket.emit('messageSent', msg);
   });
 
-  // Admin gets all chats
   socket.on('getChats', () => {
     if (socket.isAdmin) {
       socket.emit('allChats', chatMessages);
@@ -135,7 +111,7 @@ app.use((req, res) => {
   });
 });
 
-// Error handler
+// Error
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).render('error', {
