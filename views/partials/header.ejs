@@ -24,6 +24,7 @@
       <li><a href="/">হোম</a></li>
       <li><a href="/products">প্রোডাক্ট</a></li>
       <% if (user) { %>
+        <li><a href="/support">সাপোর্ট</a></li>
         <li><a href="/cart"><i class="fas fa-shopping-cart"></i> কার্ট</a></li>
         <li><a href="/dashboard">ড্যাশবোর্ড</a></li>
         <% if (user.role === 'admin') { %>
@@ -38,12 +39,12 @@
   </div>
 </nav>
 
-<!-- Mobile Menu -->
 <div class="mobile-menu" id="mobileMenu">
   <ul class="mobile-links">
     <li><a href="/" onclick="closeMobileMenu()">হোম</a></li>
     <li><a href="/products" onclick="closeMobileMenu()">প্রোডাক্ট</a></li>
     <% if (user) { %>
+      <li><a href="/support" onclick="closeMobileMenu()">সাপোর্ট</a></li>
       <li><a href="/cart" onclick="closeMobileMenu()"><i class="fas fa-shopping-cart"></i> কার্ট</a></li>
       <li><a href="/dashboard" onclick="closeMobileMenu()">ড্যাশবোর্ড</a></li>
       <% if (user.role === 'admin') { %>
