@@ -11,7 +11,6 @@
 </head>
 <body class="admin-body">
 <div class="admin-wrapper">
-  <!-- Sidebar -->
   <aside class="admin-sidebar" id="adminSidebar">
     <div class="sidebar-header">
       <% if (settings.logoImage) { %>
@@ -37,6 +36,9 @@
       <a href="/admin/users" class="sidebar-link <%= typeof activePage !== 'undefined' && activePage === 'users' ? 'active' : '' %>">
         <i class="fas fa-users"></i> ইউজার
       </a>
+      <a href="/admin/chat" class="sidebar-link <%= typeof activePage !== 'undefined' && activePage === 'chat' ? 'active' : '' %>">
+        <i class="fas fa-comments"></i> লাইভ চ্যাট
+      </a>
       <a href="/admin/settings" class="sidebar-link <%= typeof activePage !== 'undefined' && activePage === 'settings' ? 'active' : '' %>">
         <i class="fas fa-cog"></i> সেটিংস
       </a>
@@ -45,7 +47,6 @@
       <a href="/auth/logout" class="sidebar-link text-danger"><i class="fas fa-sign-out-alt"></i> লগআউট</a>
     </nav>
   </aside>
-  <!-- Main -->
   <div class="admin-main">
     <header class="admin-topbar">
       <button class="sidebar-toggle" id="sidebarToggle"><i class="fas fa-bars"></i></button>
