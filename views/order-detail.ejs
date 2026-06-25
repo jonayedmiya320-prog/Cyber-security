@@ -49,7 +49,7 @@
         <% if (order.status === 'approved') { %>
           <div class="download-section">
             <h4><i class="fas fa-download"></i> আপনার ফাইল ডাউনলোড করুন</h4>
-            <% order.items.forEach((item, i) => { %>
+            <% order.items.forEach(item => { %>
               <a href="/dashboard/download/<%= item.productId %>" class="btn btn-primary btn-block" style="margin-bottom:0.5rem;">
                 <i class="fas fa-download"></i> <%= item.name %> ডাউনলোড করুন
               </a>
