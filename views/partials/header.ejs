@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><%= typeof pageTitle !== 'undefined' ? pageTitle + ' | ' : '' %><%= settings.siteName || 'MYMENSINGH CYBER LAB' %></title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <link rel="stylesheet" href="/css/style.css">
 </head>
@@ -45,7 +45,7 @@
     <li><a href="/products" onclick="closeMobileMenu()">প্রোডাক্ট</a></li>
     <% if (user) { %>
       <li><a href="/support" onclick="closeMobileMenu()">সাপোর্ট</a></li>
-      <li><a href="/cart" onclick="closeMobileMenu()"><i class="fas fa-shopping-cart"></i> কার্ট</a></li>
+      <li><a href="/cart" onclick="closeMobileMenu()">কার্ট</a></li>
       <li><a href="/dashboard" onclick="closeMobileMenu()">ড্যাশবোর্ড</a></li>
       <% if (user.role === 'admin') { %>
         <li><a href="/admin" onclick="closeMobileMenu()">Admin Panel</a></li>
